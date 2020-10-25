@@ -1,0 +1,102 @@
+<html>
+<head>
+	<title>Beeline Bus Locator</title>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.js"></script>
+    <script src="https://unpkg.com/leaflet-draw@0.4.13/dist/leaflet.draw.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.css"/>
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/leaflet-draw@0.4.13/dist/leaflet.draw.css"/>
+	<link href="bus-locator.css" rel="stylesheet">
+	<script>
+	function updateRoute(e){$(".busRoute").val(("000"+e).slice(-4)).trigger("change")}$(document).ready(function(){var e,o,t;$(".busRoute").change(function(){for(var a in $(".routeInfo").html(""),void 0!==t&&t.remove(r),r._layers)"map"!=r._layers[a].mapType&&r._layers[a].remove();e=!0,o=$(this).val(),$.ajax({method:"GET",dataType:"json",url:"http://buslocations.herokuapp.com/https://wcgtfs.westchestergov.com/api/vehiclepositions?format=json"}).done(function(t){$.each(t.entity,function(t,a){a.vehicle.trip.route_id==o&&(e=!1,a.vehicle.position.speed>0?L.marker([a.vehicle.position.latitude,a.vehicle.position.longitude],{icon:L.mapquest.icons.marker({primaryColor:"#0384fc",secondaryColor:"#4CAF50",symbol:$(".busRoute").val().replace(/^0+/,"")}),draggable:!1}).addTo(r):L.marker([a.vehicle.position.latitude,a.vehicle.position.longitude],{icon:L.mapquest.icons.marker({primaryColor:"#0384fc",secondaryColor:"#FF1744",symbol:$(".busRoute").val().replace(/^0+/,"")}),draggable:!1}).addTo(r))}),e&&alert("We couldn't locate any route "+$(".busRoute").val().replace(/^0+/,"")+" busses, but here is the approximate route they take.")}),$.get(o+".json",function(e){$(".routeInfo").html("<br/><hr/><b>Route: "+e.routeNum+"</b><br/>"+e.routeName+'<br/><br/><button onclick="updateRoute('+e.routeNum+')">Refresh Locations</button>'),$(".routeInfo").show(),t=L.polyline(e.coords,{color:"#0384fc"},{weight:10}).addTo(r),r.fitBounds(t.getBounds()),r.addControl(new L.Control.Draw({draw:!1}))})}),L.mapquest.key="AyxwA0G6AiCOuWnzfd1DB8nzPFG7cBRO";var a,n,r=L.mapquest.map("map",{center:[41.0335,-73.7736],layers:L.mapquest.tileLayer("map"),zoom:11});r.addControl(L.mapquest.control()),0==(a="hideWelcome",(n=document.cookie.match("(^|[^;]+)\\s*"+a+"\\s*=\\s*([^;]+)"))?n.pop():"")&&$(".welcome").fadeIn(),$("#dontshowagain").click(function(){$(this).attr("checked")&&(document.cookie="hideWelcome=true;",$(".welcome").fadeOut())})}),$(document).click(function(){$(event.target).closest("#welcome-content").length||$(event.target).is("#welcome-content")||$(".welcome").fadeOut()});
+	</script>
+</head>
+
+<body>
+<div id="map" style="width: 100%; height: 100%;"></div>
+<div class="userInput">
+	<img src="500px-BeeLineBus.png" alt="Beeline Bus Locator" width="300" height="105"/>
+	<br/><br/>
+	<span class="txt">Enter a bus route number to see where all the busses are on that route.<br/><br/></span>
+	<table align="center">
+		<tr>
+			<td>Choose a route:</td><td><select class="busRoute">
+				<option value="0001"></option>
+				<option value="0001">1</option>
+				<option value="0002">2</option>
+				<option value="0003">3</option>
+				<option value="0004">4</option>
+				<option value="0005">5</option>
+				<option value="0006">6</option>
+				<option value="0007">7</option>
+				<option value="0008">8</option>
+				<option value="0009">9</option>
+				<option value="0010">10</option>
+				<option value="0011">11</option>
+				<option value="0012">12</option>
+				<option value="0013">13</option>
+				<option value="0014">14</option>
+				<option value="0015">15</option>
+				<option value="0016">16</option>
+				<option value="0017">17</option>
+				<option value="0018">18</option>
+				<option value="0019">19</option>
+				<option value="0020">20</option>
+				<option value="0021">21</option>
+				<option value="0025">25</option>
+				<option value="0026">26</option>
+				<option value="0027">27</option>
+				<option value="0030">30</option>
+				<option value="0031">31</option>
+				<option value="0032">32</option>
+				<option value="0034">34</option>
+				<option value="0038">38</option>
+				<option value="0039">39</option>
+				<option value="0040">40</option>
+				<option value="0041">41</option>
+				<option value="0042">42</option>
+				<option value="0043">43</option>
+				<option value="0045">45</option>
+				<option value="0045Q">45Q</option>
+				<option value="0052">52</option>
+				<option value="0053">53</option>
+				<option value="0054">54</option>
+				<option value="0055">55</option>
+				<option value="0060">60</option>
+				<option value="0061">61</option>
+				<option value="0062">62</option>
+				<option value="0063">63</option>
+				<option value="0064">64</option>
+				<option value="0065">65</option>
+				<option value="0066">66</option>
+				<option value="0070">70</option>
+				<option value="0071">71</option>
+				<option value="0077">77</option>
+				<option value="0078">78</option>
+				<option value="0028">BxM4C</option>
+			</select></td>
+		</tr>
+	</table>
+	<div class="routeInfo"></div>
+</div>
+<div class="welcome">
+	<div class="welcome-content" id="welcome-content">
+		<h1>Beeline Bus Locator</h1>
+		<p class="txt">This tool will show you the position of each Beeline Bus on a particular route in near real-time. Just choose the route from the drop-down on the left.</p>
+		<table cellpadding="2" cellspacing="2" border="0">
+			<tr>
+				<td><img src="mapkey.png" border="1" alt=""/></td>
+				<td><b>How to read the map</b><br/>- Blue lines mark the approximate route.<br/>- Baloons indicate bus locations and route number.<br/>- Green baloons indicate that the bus is moving.<br/>- Red baloons indicate that the bus is stopped.</td>
+			</tr>
+		</table>	
+		<p class="txt"><b><i>Please note...</i></b><br/>- This website was created as a proof of concept with real-time data from the <a href="https://wcgtfs.westchestergov.com" target="_blank">Westchester County Transit API Service</a></br>- The bus routes shown are approximate and may not correspond to the exact route taken by a bus on a particular day or at a particular time.<br/>- For official schedules and routes visit: <a href="https://transportation.westchestergov.com/bee-line/timetables-and-maps" target="_blank">Beeline Bus</a></p>
+		<table>
+			<tr>
+				<td><input type="checkbox" id="dontshowagain" value=""/></td><td>OK, got it. Don't show me this again.</td>
+			</tr>
+		</table>
+	</div>
+</div>
+</body>
+</html>
+	
